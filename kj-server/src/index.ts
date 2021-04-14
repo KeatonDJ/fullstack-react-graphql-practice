@@ -1,6 +1,6 @@
 import { MikroORM } from "@mikro-orm/core";
+import express from "express";
 import { __prod__ } from "./consts";
-import { Recipe } from "./entities/Recipie";
 import mikroOrmConf from "./mikro-orm.config";
 
 const main = async () => {
@@ -8,17 +8,11 @@ const main = async () => {
   const orm = await MikroORM.init(mikroOrmConf);
   await orm.getMigrator().up();
 
-  const recipe = orm.em.create(Recipe, {
-    name: "first",
+  const app = express();
+
+  app.listen(4000, () => {
+    console.log("Server started on Port:4000");
   });
-  await orm.em.persistAndFlush(recipe);
-
-  const recipes = await orm.em.find(Recipe, {});
-
-  console.log(recipes);
-
-  // Not usable as we are using class-based ORM properties
-  //await orm.em.nativeInsert(Recipe, {name: 'first'});
 };
 
 main();
